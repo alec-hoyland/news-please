@@ -136,6 +136,8 @@ class NewsPleaseLauncher(object):
 
         self.__single_crawler = self.get_abs_file_path("./single_crawler.py", True, False)
 
+        self.timeout = int(timeout)
+
         if self.timeout == 0:
             self.manage_crawlers()
         else:
@@ -693,6 +695,7 @@ Cleanup files:
     reset_postgresql=plac.Annotation('reset Postgresql database', 'flag'),
     reset_all=plac.Annotation('combines all reset options', 'flag'),
     no_confirm=plac.Annotation('skip confirm dialogs', 'flag')
+    timeout=plac.Annotation('timeout after this many seconds', 'option', 't')
 )
 def cli(cfg_file_path, resume, reset_elasticsearch, reset_mysql, reset_postgresql, reset_json, reset_all, no_confirm, timeout):
     "A generic news crawler and extractor."
