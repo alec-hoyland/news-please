@@ -5,7 +5,7 @@ import signal
 import sys
 import threading
 import time
-import multithreading
+import multiprocessing
 from distutils.dir_util import copy_tree
 from subprocess import Popen
 
