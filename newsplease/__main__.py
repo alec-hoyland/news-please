@@ -698,7 +698,7 @@ Cleanup files:
     no_confirm=plac.Annotation('skip confirm dialogs', 'flag'),
     timeout=plac.Annotation('timeout after this many seconds', 'option', 't')
 )
-def cli(cfg_file_path, resume, reset_elasticsearch, reset_mysql, reset_postgresql, reset_json, reset_all, no_confirm, timeout):
+def cli(cfg_file_path, resume, reset_elasticsearch, reset_mysql, reset_postgresql, reset_json, reset_all, no_confirm, timeout=0):
     "A generic news crawler and extractor."
 
     if reset_all:
