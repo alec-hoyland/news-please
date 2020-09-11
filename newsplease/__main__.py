@@ -139,7 +139,8 @@ class NewsPleaseLauncher(object):
         self.timeout = int(timeout)
 
         if self.timeout == 0:
-            self.manage_crawlers()
+            # self.manage_crawlers()
+            print("timeout isn't working")
         else:
             p = multiprocessing.Process(target=self.manage_crawlers(), name="news-please.manage_crawlers", args=())
             p.start()
