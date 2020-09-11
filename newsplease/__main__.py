@@ -138,6 +138,9 @@ class NewsPleaseLauncher(object):
 
         self.timeout = int(timeout)
 
+        print("timeout = " + timeout)
+        exit()
+
         if self.timeout == 0:
             # self.manage_crawlers()
             print("timeout isn't working")
