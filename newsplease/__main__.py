@@ -57,11 +57,12 @@ class NewsPleaseLauncher(object):
     config_directory_default_path = "~/news-please-repo/config/"
     config_file_default_name = "config.cfg"
     library_mode = None
+    timeout = 0
 
     __single_crawler = False
 
     def __init__(self, cfg_directory_path, is_resume, is_reset_elasticsearch,
-        is_reset_json, is_reset_mysql, is_reset_postgresql, is_no_confirm, library_mode=False):
+        is_reset_json, is_reset_mysql, is_reset_postgresql, is_no_confirm, timeout, library_mode=False):
         """
         The constructor of the main class, thus the real entry point to the tool.
         :param cfg_file_path:
@@ -71,6 +72,7 @@ class NewsPleaseLauncher(object):
         :param is_reset_mysql:
         :param is_reset_postgresql:
         :param is_no_confirm:
+        :param timeout:
         """
         configure_logging({"LOG_LEVEL": "ERROR"})
         self.log = logging.getLogger(__name__)
@@ -133,7 +135,16 @@ class NewsPleaseLauncher(object):
 
         self.__single_crawler = self.get_abs_file_path("./single_crawler.py", True, False)
 
-        self.manage_crawlers()
+        if self.timeout == 0:
+            self.manage_crawlers()
+        else:
+            p = multiprocessing.Process(target=self.manage_crawlers(), name="news-please.manage_crawlers", args=())
+            p.start()
+
+            # Wait timeout seconds
+            p.join(self.timeout)
+            p.terminate()
+            p.join()
 
     def set_stop_handler(self):
         """
@@ -682,7 +693,7 @@ Cleanup files:
     reset_all=plac.Annotation('combines all reset options', 'flag'),
     no_confirm=plac.Annotation('skip confirm dialogs', 'flag')
 )
-def cli(cfg_file_path, resume, reset_elasticsearch, reset_mysql, reset_postgresql, reset_json, reset_all, no_confirm):
+def cli(cfg_file_path, resume, reset_elasticsearch, reset_mysql, reset_postgresql, reset_json, reset_all, no_confirm, timeout):
     "A generic news crawler and extractor."
 
     if reset_all:
@@ -694,7 +705,7 @@ def cli(cfg_file_path, resume, reset_elasticsearch, reset_mysql, reset_postgresq
     if cfg_file_path and not cfg_file_path.endswith(os.path.sep):
         cfg_file_path += os.path.sep
 
-    NewsPleaseLauncher(cfg_file_path, resume, reset_elasticsearch, reset_json, reset_mysql, reset_postgresql, no_confirm)
+    NewsPleaseLauncher(cfg_file_path, resume, reset_elasticsearch, reset_json, reset_mysql, reset_postgresql, no_confirm, timeout)
 
 
 def main():
